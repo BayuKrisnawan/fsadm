@@ -346,7 +346,7 @@
 
 //set a default template
 	$_SESSION['domain']['template']['name'] = 'default';
-	$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/logo.png';
+	$_SESSION['theme']['menu_brand_image']['text'] = PROJECT_PATH.'/themes/default/images/nubitel-logo.png';
 	$_SESSION['theme']['menu_brand_type']['text'] = 'image';
 
 //save an install log if debug is true
