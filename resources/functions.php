@@ -202,10 +202,12 @@
 	}
 
 	if (!function_exists('recursive_delete')) {
-		if (file_exists('/usr/bin/find')) {
+		// sometimes find isn't located /usr/bin/find
+		if (file_exists('/bin/find') || file_exists('/usr/bin/find')) {
+			$find = file_exists('/bin/find') ? "/bin/find" : "/usr/bin/find";
 			function recursive_delete($directory) {
 				if (isset($directory) && strlen($directory) > 8) {
-					exec('/usr/bin/find '.$directory.'/* -name "*" -delete');
+					exec($find .' '.$directory.'/*  ! -name "*log" ! -name "*sock" ! -name "*.pid" -type f -delete');
 					//exec('rm -Rf '.$directory.'/*');
 					clearstatcache();
 				}
@@ -222,10 +224,14 @@
 		else {
 			function recursive_delete($directory) {
 				foreach (glob($directory) as $file) {
+                                        if ( preg_match("/\.(log|pid|sock)$/", $file) ) {
+                                                continue;
+                                        }
 					if (is_dir($file)) {
 						//$this->write_debug("rm dir: ".$file);
 						recursive_delete("$file/*");
-						rmdir($file);
+						// avoid to remove direcrory
+						//rmdir($file);
 					}
 					else {
 						//$this->write_debug("delete file: ".$file);
