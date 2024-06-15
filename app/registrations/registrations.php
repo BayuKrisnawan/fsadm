@@ -118,9 +118,17 @@
 		require_once "resources/header.php";
 	}
 
+//create the event socket connection
+$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password'])
+;
+//show hostname
+$cmd = "api system env|grep MY_POD_NAME |sed -e 's/MY_POD_NAME=//g'";
+$hostname = event_socket_request($fp, $cmd);
+$hostname = trim($hostname);
+
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-registrations']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-registrations']." [" . $hostname . "] (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (!$reload) {
 		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.($qs ? '?' : null).$qs['show'].$qs['search'].$qs['profile']]);
