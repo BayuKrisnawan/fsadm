@@ -111,8 +111,13 @@
 
 		//get the agent list
 
+			//show hostname
+			$cmd = "api system env|grep MY_POD_NAME |sed -e 's/MY_POD_NAME=//g'";
+			$hostname = event_socket_request($fp, $cmd);
+			$hostname = trim($hostname);
+
 			//show the title
-				echo "<b>".$text['header-agents']."</b><br />\n";
+				echo "<b>".$text['header-agents']." [".$hostname ."]</b><br />\n";
 				echo $text['description-agents']."<br /><br />\n";
 
 			//send the event socket command and get the response
