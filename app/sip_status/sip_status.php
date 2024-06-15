@@ -312,12 +312,13 @@
 
 //status
 	if ($fp && permission_exists('sip_status_switch_status')) {
-		$cmd = "api status";
+		$cmd = "api system env|grep MY_POD_NAME |sed -e 's/MY_POD_NAME=/Hostname ==>  /g'";
 		$response = event_socket_request($fp, $cmd);
 		$cmd = "api version";
 		$response .= event_socket_request($fp, $cmd);
-		$cmd = "api system uname -a ";
+		$cmd = "api status";
 		$response .= event_socket_request($fp, $cmd);
+		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
 		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
 		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'>";
 		echo "<pre>";
