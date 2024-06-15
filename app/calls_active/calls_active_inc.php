@@ -115,10 +115,13 @@
 		//create token
 			$object = new token;
 			$token = $object->create('/app/calls_active/calls_active_inc.php');
-
+		//show hostname
+	                $cmd = "api system env|grep MY_POD_NAME |sed -e 's/MY_POD_NAME=//g'";
+                	$hostname = event_socket_request($fp, $cmd);
+			$hostname = trim($hostname);
 		//show content
 			echo "<div class='action_bar' id='action_bar'>\n";
-			echo "	<div class='heading'><b>".$text['title']." (".$num_rows.")</b></div>\n";
+			echo "	<div class='heading'><b>".$text['title']." [" . $hostname . "] (".$num_rows.")</b></div>\n";
 			echo "	<div class='actions'>\n";
 			echo "		<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
 			if (permission_exists('call_active_hangup') && $rows) {
