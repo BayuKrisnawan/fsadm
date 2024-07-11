@@ -29,6 +29,7 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	exit;
 
 //permisisions
 	if (permission_exists('xml_cdr_view')) {
