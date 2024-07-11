@@ -119,6 +119,7 @@
 	}
 	echo "</div>\n";
 	echo "	<div class='actions'>\n";
+	/*
 	if (!$archive_request) {
 		if (permission_exists('xml_cdr_statistics')) {
 			echo button::create(['type'=>'button','label'=>$text['button-statistics'],'icon'=>'chart-area','link'=>'xml_cdr_statistics.php']);
@@ -127,6 +128,7 @@
 			echo button::create(['type'=>'button','label'=>$text['button-archive'],'icon'=>'archive','link'=>'xml_cdr_archive.php'.($_REQUEST['show'] == 'all' ? '?show=all' : null)]);
 		}
 	}
+	*/
 	echo 		"<form id='frm_export' class='inline' method='post' action='xml_cdr_export.php'>\n";
 	if ($archive_request) {
 		echo "	<input type='hidden' name='archive_request' value='true'>\n";
