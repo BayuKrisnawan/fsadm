@@ -29,6 +29,7 @@
 	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "xml_cdr_statistics_inc.php";
+	exit;
 
 //check permissions
 	if (permission_exists('xml_cdr_statistics')) {
