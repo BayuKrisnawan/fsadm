@@ -116,7 +116,7 @@
 			$object = new token;
 			$token = $object->create('/app/calls_active/calls_active_inc.php');
 		//show hostname
-	                $cmd = "api system env|grep MY_POD_NAME |sed -e 's/MY_POD_NAME=//g'";
+	                $cmd = "api system env|grep 'HOSTNAME\|MY_POD_NAME'|cut -d\= -f2|tail -1";
                 	$hostname = event_socket_request($fp, $cmd);
 			$hostname = trim($hostname);
 		//show content
