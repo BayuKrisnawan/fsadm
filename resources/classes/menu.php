@@ -1045,7 +1045,8 @@ if (!class_exists('menu')) {
 				//domain name/selector
 					if (isset($_SESSION['username']) && $_SESSION['username'] != '' && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $_SESSION['theme']['domain_visible']['text'] == 'true') {
 						$html .= "		<li class='nav-item'>\n";
-						$html .= "			<a class='nav-link domain_selector_domain' href='#' title='".$this->text['theme-label-open_selector']."'>".escape($_SESSION['domain_name'])."|" .escape($_SESSION['domains'][$_SESSION['domain_uuid']]['freeswitch_endpoint']) . "</a>";
+						// $html .= "			<a class='nav-link domain_selector_domain' href='#' title='".$this->text['theme-label-open_selector']. "FS Endpoint: ". escape($_SESSION['domains'][$_SESSION['domain_uuid']]['freeswitch_endpoint']) ."'>".escape($_SESSION['domain_name'])."</a>";
+						$html .= "			<a class='nav-link domain_selector_domain' href='#' title='FS Endpoint: ". escape($_SESSION['domains'][$_SESSION['domain_uuid']]['freeswitch_endpoint']) ."'>".escape($_SESSION['domain_name'])."</a>";
 						$html .= "		</li>\n";
 					}
 				//logout icon
