@@ -64,8 +64,10 @@
 		$domain_name = strtolower($_POST["domain_name"]);
 		$domain_enabled = $_POST["domain_enabled"];
 		$domain_description = $_POST["domain_description"];
+		$freeswitch_endpoint = $_POST["freeswitch_endpoint"];
+		$freeswitch_endpoint_port = $_POST["freeswitch_endpoint_port"];
+		$public_freeswitch_endpoint = $_POST["public_freeswitch_endpoint"];
 	}
-
 //process the data
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
@@ -89,8 +91,11 @@
 				}
 			}
 
+	// echo " <h1>--- dn:" . $_POST["domain_name"] . " de:" .  $_POST["domain_enabled"] . " dd : " .  $_POST["domain_description"] . " : $action </h1>"; 
+	// echo "<h1> len persistformvar " . strlen($_POST["persistformvar"]) . "</h1>" ; die();
 		//validate the token
 			$token = new token;
+			print_r($token);
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
 				header('Location: domains.php');
@@ -133,6 +138,9 @@
 							$array['domains'][0]['domain_name'] = $domain_name;
 							$array['domains'][0]['domain_enabled'] = $domain_enabled;
 							$array['domains'][0]['domain_description'] = $domain_description;
+							$array['domains'][0]['freeswitch_endpoint'] = $freeswitch_endpoint;
+							$array['domains'][0]['freeswitch_endpoint_port'] = $freeswitch_endpoint_port;
+							$array['domains'][0]['public_freeswitch_endpoint'] = $public_freeswitch_endpoint;
 						// MOD: BAYU
 							$tenant_name=explode('.',$domain_name);
 							$array['domains'][0]['tenant_name'] = $tenant_name[0];
@@ -179,6 +187,9 @@
 						$array['domains'][0]['domain_name'] = $domain_name;
 						$array['domains'][0]['domain_enabled'] = $domain_enabled;
 						$array['domains'][0]['domain_description'] = $domain_description;
+						$array['domains'][0]['freeswitch_endpoint'] = $freeswitch_endpoint;
+						$array['domains'][0]['freeswitch_endpoint_port'] = $freeswitch_endpoint_port;
+						$array['domains'][0]['public_freeswitch_endpoint'] = $public_freeswitch_endpoint;
 						
 						$database = new database;
 						$database->app_name = 'domains';
@@ -531,6 +542,9 @@
 		$sql .= "domain_uuid, ";
 		$sql .= "domain_name, ";
 		$sql .= "cast(domain_enabled as text), ";
+		$sql .= "freeswitch_endpoint, ";		
+		$sql .= "freeswitch_endpoint_port, ";		
+		$sql .= "public_freeswitch_endpoint, ";		
 		$sql .= "domain_description ";
 		$sql .= "from v_domains ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -541,6 +555,9 @@
 			$domain_name = strtolower($row["domain_name"]);
 			$domain_enabled = $row["domain_enabled"];
 			$domain_description = $row["domain_description"];
+			$freeswitch_endpoint = $row["freeswitch_endpoint"];
+			$freeswitch_endpoint_port = $row["freeswitch_endpoint_port"];
+			$public_freeswitch_endpoint = $row["public_freeswitch_endpoint"];
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -661,7 +678,37 @@
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
+	echo "<td class='vtable' align='left'></td>";
 	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	FS Endpoint: \n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='freeswitch_endpoint' maxlength='255' value=\"".escape($freeswitch_endpoint)."\">\n";
+	echo "<br />\n";
+	echo "FreeSwitch Endpoint\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='right'>\n";
+	echo "	<input class='formfld' type='text' name='freeswitch_endpoint_port' maxlength='5' value=\"".escape($freeswitch_endpoint_port)."\">\n";
+	echo "<br />\n";
+	echo "Endpoint Port\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Public FS Endpoint: \n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='public_freeswitch_endpoint' maxlength='255' value=\"".escape($public_freeswitch_endpoint)."\">\n";
+	echo "<br />\n";
+	echo "Public FreeSwitch Endpoint| WebRTC Gateway\n";
+	echo "<td class='vtable' align='left'></td>";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
@@ -675,7 +722,9 @@
 	echo "<br />\n";
 	echo $text['description-domain_enabled']."\n";
 	echo "</td>\n";
+	echo "<td class='vtable' align='left'></td>";
 	echo "</tr>\n";
+
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -686,6 +735,7 @@
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
+	echo "<td class='vtable' align='left'></td>";
 	echo "</tr>\n";
 
 	echo "</table>";
