@@ -172,7 +172,7 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select domain_uuid, domain_name, cast(domain_enabled as text), domain_description ";
+	$sql = "select domain_uuid, domain_name, freeswitch_endpoint, public_freeswitch_endpoint, cast(domain_enabled as text), domain_description ";
 	$sql .= "from v_domains ";
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
@@ -241,6 +241,8 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	echo th_order_by('domain_name', $text['label-domain_name'], $order_by, $order);
+	echo th_order_by('freeswitch_endpoint', "FS Endpoint", $order_by, $order,null, "class='center'");
+	echo th_order_by('freeswitch_endpoint', "Public Endpoint", $order_by, $order,null, "class='center'");
 	echo "<th class='center'>".$text['label-tools']."</th>";
 	echo th_order_by('domain_enabled', $text['label-domain_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-domain_description']."</th>\n";
@@ -248,7 +250,9 @@
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
-
+	echo "<pre><!-- ";
+	print_r($_SESSION);
+	echo "--> </pre> ";
 	if (is_array($domains) && @sizeof($domains) != 0) {
 		$x = 0;
 		foreach ($domains as $row) {
@@ -273,6 +277,15 @@
 				echo "	".escape($row['domain_name']);
 			}
 			echo "	</td>\n";
+			echo "	<td class='no-link center'>";
+			echo  escape($_SESSION['domains'][$row['domain_uuid']]['freeswitch_endpoint']).":"  . escape($_SESSION['domains'][$row['domain_uuid']]['freeswitch_endpoint_port']);
+			echo "</td>\n";
+
+			echo "	</td>\n";
+			echo "	<td class='no-link center'>";
+			echo  escape($_SESSION['domains'][$row['domain_uuid']]['public_freeswitch_endpoint']);
+			echo "</td>\n";
+
 			echo "	<td class='no-link center'>\n";
 			echo "		<a href='".PROJECT_PATH."/core/domains/domains.php?domain_uuid=".escape($row['domain_uuid'])."&domain_change=true'>".$text['label-manage']."</a>";
 			if (permission_exists('domain_setting_view')) {
