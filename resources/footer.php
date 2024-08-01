@@ -201,7 +201,7 @@
 				case 'inline':
 					$container_open = "<div class='container-fluid' style='padding: 0;' align='".($_SESSION['theme']['logo_align']['text'] != '' ? $_SESSION['theme']['logo_align']['text'] : 'left')."'>\n";
 					if ($_SERVER['PHP_SELF'] != PROJECT_PATH.'/core/install/install.php') {
-						$logo = "<a href='".PROJECT_PATH."/'><img src='".($_SESSION['theme']['logo']['text'] ?: PROJECT_PATH.'/themes/default/images/nubitel-logo.png')."' style='padding: 15px 20px; ".($_SESSION['theme']['logo_style']['text'] ?: null)."'></a>";
+						$logo = "<a href='".PROJECT_PATH."/'><img src='".($_SESSION['theme']['logo']['text'] ?: PROJECT_PATH.'/themes/default/images/logo.png')."' style='padding: 15px 20px; ".($_SESSION['theme']['logo_style']['text'] ?: null)."'></a>";
 					}
 					$menu = new menu;
 					$menu->text = $text;
@@ -239,7 +239,7 @@
 				$login_logo_source = $_SESSION['theme']['logo']['text'];
 			}
 			else {
-				$login_logo_source = PROJECT_PATH.'/themes/default/images/nubitel-logo-login.png';
+				$login_logo_source = PROJECT_PATH.'/themes/default/images/logo_login.png';
 			}
 		//determine logo dimensions
 			if (isset($_SESSION['theme']['login_logo_width']['text']) && $_SESSION['theme']['login_logo_width']['text'] != '') {
