@@ -92,6 +92,8 @@
 		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
 	}
 
+	/* DISABLE DASHBOARD MOD */
+	/*
 //determine hud blocks
 	if (is_array($_SESSION['dashboard']) && sizeof($_SESSION['dashboard']) > 0) {
 		foreach ($_SESSION['groups'] as $index => $group) {
@@ -108,7 +110,6 @@
 		sort($selected_blocks, SORT_NATURAL);
 	}
 	unset($group, $group_name, $index, $hud_block, $hud_blocks);
-
 
 //collect stats for counts and limits
 	if ((is_array($selected_blocks) && in_array('counts', $selected_blocks)) || (is_array($selected_blocks) && in_array('limits', $selected_blocks))) {
@@ -1258,6 +1259,7 @@
 		echo "</div>\n";
 	}
 
+	 */ /* END OF MOD */
 //show the footer
 	require_once "resources/footer.php";
 
