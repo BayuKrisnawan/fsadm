@@ -326,136 +326,6 @@
 					$y++;
 				}
 			}
-/*
-
-
-	<extension name="Autocallback(Rado)" continue="" uuid="77d25e4c-db05-428b-8fb8-d05bc8fb12ed">
-        <condition field="destination_number" expression="^([^#]+#)(.*)$" break="never">
-          <action application="set" data="caller_id_name=$2"/>
-        </condition>
-        <condition field="destination_number" expression="^(callcenter+)?7917$">
-          <action application="answer" data=""/>
-
-          <action application="set" data="call_center_queue_uuid=a396c670-e2f6-4bdf-9c95-87a345b3c68f"/>
-          <action application="set" data="queue_extension=7917"/>
-          <!-- hangup after successful bridge to agent -->
-          <action application="set" data="hangup_after_bridge=true"/>
-          <action application="set" data="queue_domain=${context}"/>
-          <action application="set" data="sip_h_X-QueueID=a396c670-e2f6-4bdf-9c95-87a345b3c68f"/>
-          <action application="set" data="sip_h_X-QueueExt=7917"/>
-          <action application="set" data="effective_caller_id_number=${destination_num}"/>
-          <action application="set" data="cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id"/>		
-            
-          <action application="set" data="result=${luarun(switch.lua preq ${queue_extension} ${queue_domain} ${uuid})}"/>
-          <action application="callcenter" data="${queue_extension}@${queue_domain}"/>
-          <action application="lua" data="update_leads.lua ${lead_id} 'AGENT_NOT_CONNECTED' ${row_unique_id}"/> 
-          <action application="hangup" data=""/>
-          <action application="lua" data="switch.lua posq ${queue_extension} ${queue_domain}"/> 
-          
-        </condition>
-      </extension>
-
-	  <extension name="LowQueue" continue="" uuid="31f3f570-7239-4aac-aedc-f0a24f1bc9f5">
-	<condition field="destination_number" expression="^([^#]+#)(.*)$" break="never">
-		<action application="set" data="caller_id_name=$2"/>
-	</condition>
-	<condition field="destination_number" expression="^(callcenter\+)?8000$">
-		<action application="answer" data=""/>
-		<action application="set" data="call_center_queue_uuid=bdc91241-c4f5-4cc2-9858-3e899fe948f5"/>
-		<action application="set" data="queue_extension=8000"/>
-		<action application="set" data="hangup_after_bridge=true"/>
-          <action application="set" data="queue_domain=${domain_name}"/>
-          <action application="set" data="sip_h_X-QueueID=${call_center_queue_uuid}"/>
-          <action application="set" data="sip_h_X-QueueExt=${queue_extension}"/>
-          <action application="set" data="effective_caller_id_number=${destination_num}"/>
-          <action application="set" data="cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id"/>
-          <action application="set" data="result=${luarun(switch.lua preq ${queue_extension} ${queue_domain} ${uuid})}"/>	
-          <!-- <action application="tone_stream" data=""/> -->
-
-          <action application="callcenter" data="${queue_extension}@${queue_domain}"/>
-          <action application="lua" data="update_leads.lua ${lead_id} 'AGENT_NOT_CONNECTED' ${row_unique_id}"/> 
-          <action application="lua" data="switch.lua posq ${queue_extension} ${queue_domain}"/> 
-		<action application="tone_stream" data=""/>
-		<action application="callcenter" data="8000@cx.nubitel.io"/>
-	</condition>
-</extension>
-
-<extension name="LowQueue" continue="" uuid="31f3f570-7239-4aac-aedc-f0a24f1bc9f5">
-	<condition field="destination_number" expression="^([^#]+#)(.*)$" break="never">
-		<action application="set" data="caller_id_name=$2"/>
-	</condition>
-	<condition field="destination_number" expression="^(callcenter\+)?8000$">
-		<action application="answer" data=""/>
-		<action application="set" data="call_center_queue_uuid=1bbd9fca-88e5-4046-bd46-0228830dc8e3"/>
-		<action application="set" data="queue_extension=8000"/>
-		<action application="set" data="queue_domain=${domain_name}"/>
-		<action application="set" data="sip_h_X-QueueID=${call_center_queue_uuid}"/>
-		<action application="set" data="sip_h_X-QueueExt=${queue_extension}"/>
-		<action application="set" data="effective_caller_id_number=${destination_num}"/>
-		<action application="set" data="cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt"/>
-		<action application="set" data="hangup_after_bridge=true"/>
-		<action application="set" data="result=${luarun(switch.lua preq ${queue_extension} ${queue_domain} ${uuid})}"/>
-		<action application="callcenter" data="${queue_extension}@${queue_domain}"/>
-		<action application="lua" data="switch.lua posq ${queue_extension} ${queue_domain}"/>
-	</condition>
-</extension>
-
-
-<extension name="Autocallback(Rado)" continue="" uuid="77d25e4c-db05-428b-8fb8-d05bc8fb12ed">
-        <condition field="destination_number" expression="^([^#]+#)(.*)$" break="never">
-          <action application="set" data="caller_id_name=$2"/>
-        </condition>
-        <condition field="destination_number" expression="^(callcenter+)?7917$">
-          <action application="answer" data=""/>
-
-          <action application="set" data="call_center_queue_uuid=a396c670-e2f6-4bdf-9c95-87a345b3c68f"/>
-          <action application="set" data="queue_extension=7917"/>
-          <!-- hangup after successful bridge to agent -->
-          <action application="set" data="hangup_after_bridge=true"/>
-          <action application="set" data="queue_domain=${context}"/>
-          <action application="set" data="sip_h_X-QueueID=a396c670-e2f6-4bdf-9c95-87a345b3c68f"/>
-          <action application="set" data="sip_h_X-QueueExt=7917"/>
-          <action application="set" data="effective_caller_id_number=${destination_num}"/>
-          <action application="set" data="cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id"/>		
-            
-          <action application="set" data="result=${luarun(switch.lua preq ${queue_extension} ${queue_domain} ${uuid})}"/>
-          <action application="callcenter" data="${queue_extension}@${queue_domain}"/>
-          <action application="lua" data="update_leads.lua ${lead_id} 'AGENT_NOT_CONNECTED' ${row_unique_id}"/> 
-          <action application="hangup" data=""/>
-          <action application="lua" data="switch.lua posq ${queue_extension} ${queue_domain}"/> 
-          
-        </condition>
-      </extension>
-
-	  AutoCallBack
-<extension name="Autocallback(CustomerSupport)" continue="" uuid="e0f7542a-6149-4a11-9361-8e8be74896a5">
-        <condition field="destination_number" expression="^([^#]+#)(.*)$" break="never">
-          <action application="set" data="caller_id_name=$2"/>
-        </condition>
-        <condition field="destination_number" expression="^(callcenter+)?8102$">
-          <action application="answer" data=""/>
-
-          <action application="set" data="call_center_queue_uuid=febefa73-6531-46fc-9459-7faefb43574d"/>
-          <action application="set" data="queue_extension=8102"/>
-          <!-- hangup after successful bridge to agent -->
-          <action application="set" data="hangup_after_bridge=true"/>
-          <action application="set" data="queue_domain=${context}"/>
-          <action application="set" data="sip_h_X-QueueID=febefa73-6531-46fc-9459-7faefb43574d"/>
-          <action application="set" data="sip_h_X-QueueExt=8102"/>
-          <action application="set" data="effective_caller_id_number=${destination_num}"/>
-          <action application="set" data="cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id"/>		
-            
-         <!--  <action application="set" data="result=${luarun(switch.lua preq ${queue_extension} ${queue_domain} ${uuid})}"/> -->
-          <action application="callcenter" data="${queue_extension}@${queue_domain}"/>
-          <action application="lua" data="update_leads.lua ${lead_id} 'AGENT_NOT_CONNECTED' ${row_unique_id}"/> 
-          <action application="hangup" data=""/>
-        <!--  <action application="lua" data="switch.lua posq ${queue_extension} ${queue_domain}"/>  -->
-          
-        </condition>
-      </extension>
-
-
-*/
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".$queue_name."\" continue=\"\" uuid=\"".$dialplan_uuid."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^([^#]+#)(.*)\$\" break=\"never\">\n";
@@ -472,15 +342,20 @@
 			$dialplan_xml .= "		<action application=\"set\" data=\"queue_domain=\${domain_name}\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-QueueID=\${call_center_queue_uuid}\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-QueueExt=\${queue_extension}\"/>\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_number=\${destination_num}\"/>\n";
-			if ( isset($queue_autocallback)) 
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id\"/>\n";
-				else 
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-cdrUuid=\$call_uuid}\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-SubQueueID=\$sub_queue_id}\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-IVR=\${ivr_var}\"/>\n";
+			//$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_number=\${destination_num}\"/>\n";
+			if ( isset($queue_autocallback)) {
+					//$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
+			} else  {
+					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
+			}
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 			if ( ! isset($queue_autocallback)) {
 				$dialplan_xml .= "		<!-- Entering PREQ While Ringing -->\n";
-				$dialplan_xml .= "		<action application=\"set\" data=\"result=\${luarun(switch.lua preq \${queue_extension} \${queue_domain} \${uuid})}\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"result=\${luarun(switch.lua preq \${queue_extension} \${queue_domain} \${call_uuid})}\"/>\n";
 			}
 			if ($queue_time_base_score_sec != '') {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$queue_time_base_score_sec."\"/>\n";

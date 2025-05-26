@@ -74,7 +74,7 @@
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if ($fp) {
 			$response = event_socket_request($fp, 'api reloadxml');
-			$response = event_socket_request($fp, 'api callcenter_config queue '.$cmd. ' '.$queue_extension."@".$_SESSION["domain_name"]);
+			$response = event_socket_request($fp, 'bgapi callcenter_config queue '.$cmd. ' '.$queue_extension."@".$_SESSION["domain_name"]);
 			fclose($fp);
 		}
 		else {
