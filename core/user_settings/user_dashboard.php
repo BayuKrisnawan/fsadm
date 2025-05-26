@@ -1193,6 +1193,71 @@
 
 	}
 
+//additional items for the dashbaord
+	if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+		echo "<div class='row' style='margin-top: 30px;'>\n";
+
+		if (!is_array($selected_blocks) || in_array('caller_id', $selected_blocks)) {
+			//caller id management
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/extension_dashboard.php")) {
+					if (permission_exists('extension_caller_id')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/extensions/extension_dashboard.php";
+						echo "</div>";
+					}
+				}
+		}
+
+		if (!is_array($selected_blocks) || in_array('call_routing', $selected_blocks)) {
+			//call routing
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
+					if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/calls/calls.php";
+						echo "</div>\n";
+					}
+				}
+		}
+
+		if (!is_array($selected_blocks) || in_array('ring_groups', $selected_blocks)) {
+			//ring group forward
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
+					if (permission_exists('ring_group_forward')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/ring_groups/ring_group_forward.php";
+						echo "</div>";
+					}
+				}
+		}
+
+		if (!is_array($selected_blocks) || in_array('call_center_agents', $selected_blocks)) {
+			//call center agent
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/call_center_agent_dashboard.php")) {
+					if (permission_exists('call_center_agent_view')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 0 0 30px 0;'>\n";
+						require_once "app/call_centers/call_center_agent_dashboard.php";
+						echo "</div>";
+					}
+				}
+		}
+
+		if (!is_array($selected_blocks) || in_array('device_keys', $selected_blocks)) {
+			//device key management
+				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/device_dashboard.php")) {
+					if (permission_exists('device_key_edit')) {
+						$is_included = true;
+						echo "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style='margin: 15px 0 30px 0;'>\n";
+						require_once "app/devices/device_dashboard.php";
+						echo "</div>";
+					}
+				}
+		}
+		echo "</div>\n";
+	}
 
 	 */ /* END OF MOD */
 //show the footer
