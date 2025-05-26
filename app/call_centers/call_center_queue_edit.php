@@ -348,9 +348,10 @@
 			//$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_number=\${destination_num}\"/>\n";
 			if ( isset($queue_autocallback)) {
 					//$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
 			} else  {
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
+					//$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
 			}
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
 			if ( ! isset($queue_autocallback)) {
