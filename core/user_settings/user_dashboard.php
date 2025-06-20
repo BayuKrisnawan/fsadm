@@ -66,12 +66,16 @@
 //load the header
 	$document['title'] = $text['title-user_dashboard'];
 	require_once "resources/header.php";
-
+	//show hostname
+	$fsarry=$_SESSION['domains'];
+	$duuid=$_SESSION['domain_uuid'];
+	$fsendpoint=$fsarry["$duuid"]["freeswitch_endpoint"];
+	$domain_name=$fsarry["$duuid"]["domain_name"];
 //start the content
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	echo "	<tr>\n";
 	echo "		<td valign='top'>";
-	echo "			<b>".$text['header-user_dashboard']."</b><br />";
+	echo "			<b>".$text['header-user_dashboard']."<br>[".$domain_name. " | " .$fsendpoint."]<b><br />";
 	echo "		</td>\n";
 	echo "		<td valign='top' style='text-align: right; white-space: nowrap;'>\n";
 	if ($_SESSION['theme']['menu_style']['text'] != 'side') {

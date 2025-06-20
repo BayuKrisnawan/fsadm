@@ -122,13 +122,13 @@
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password'])
 ;
 //show hostname
-$cmd = "api system env|grep 'HOSTNAME\|MY_POD_NAME'|cut -d\= -f2|tail -1";
-$hostname = event_socket_request($fp, $cmd);
-$hostname = trim($hostname);
+$fsarry=$_SESSION['domains'];
+$duuid=$_SESSION['domain_uuid'];
+$fsendpoint=$fsarry["$duuid"]["freeswitch_endpoint"];
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-registrations']." [" . $hostname . "] (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-registrations']." [" . $fsendpoint . "] (".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (!$reload) {
 		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.($qs ? '?' : null).$qs['show'].$qs['search'].$qs['profile']]);

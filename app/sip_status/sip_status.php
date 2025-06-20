@@ -108,8 +108,11 @@
 	require_once "resources/header.php";
 
 //show the content
+	$fsarry=$_SESSION['domains'];
+        $duuid=$_SESSION['domain_uuid'];
+	$fsendpoint=$fsarry["$duuid"]["freeswitch_endpoint"];
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-sip_status']."</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-sip_status']." [". $fsendpoint ."]</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('system_status_sofia_status')) {
 		echo button::create(['type'=>'button','label'=>$text['button-flush_cache'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?action=cache-flush']);

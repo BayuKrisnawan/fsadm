@@ -87,8 +87,11 @@
 	require_once "resources/header.php";
 
 //show the content
+	$fsarry=$_SESSION['domains'];
+        $duuid=$_SESSION['domain_uuid'];
+	$fsendpoint=$fsarry["$duuid"]["freeswitch_endpoint"];
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-active_call_center']." (".$num_rows.")</b></div>\n";
+	echo "	<div class='heading'><b>".$text['header-active_call_center']." (".$fsendpoint."|total queue:".$num_rows.")</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";

@@ -112,12 +112,11 @@
 		//get the agent list
 
 			//show hostname
-			$cmd = "api system env|grep 'HOSTNAME\|MY_POD_NAME'|cut -d\= -f2|tail -1";
-			$hostname = event_socket_request($fp, $cmd);
-			$hostname = trim($hostname);
-
+                        $fsarry=$_SESSION['domains'];
+                        $duuid=$_SESSION['domain_uuid'];
+                        $fsendpoint=$fsarry["$duuid"]["freeswitch_endpoint"];
 			//show the title
-				echo "<b>".$text['header-agents']." [".$hostname ."]</b><br />\n";
+				echo "<b>".$text['header-agents']." [".$fsendpoint ."]</b><br />\n";
 				echo $text['description-agents']."<br /><br />\n";
 
 			//send the event socket command and get the response

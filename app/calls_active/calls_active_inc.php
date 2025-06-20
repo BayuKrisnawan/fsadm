@@ -116,12 +116,12 @@
 			$object = new token;
 			$token = $object->create('/app/calls_active/calls_active_inc.php');
 		//show hostname
-	                $cmd = "api system env|grep 'HOSTNAME\|MY_POD_NAME'|cut -d\= -f2|tail -1";
-                	$hostname = event_socket_request($fp, $cmd);
-			$hostname = trim($hostname);
+                	$fsarry=$_SESSION['domains'];
+                	$duuid=$_SESSION['domain_uuid'];
+	                $fsendpoint=$fsarry["$duuid"]["freeswitch_endpoint"];
 		//show content
 			echo "<div class='action_bar' id='action_bar'>\n";
-			echo "	<div class='heading'><b>".$text['title']." [" . $hostname . "] (".$num_rows.")</b></div>\n";
+			echo "	<div class='heading'><b>".$text['title']." [" . $fsendpoint . "] (".$num_rows.")</b></div>\n";
 			echo "	<div class='actions'>\n";
 			echo "		<span id='refresh_state'>".button::create(['type'=>'button','title'=>$text['label-refresh_pause'],'icon'=>'sync-alt fa-spin','onclick'=>'refresh_stop()'])."</span>";
 			if (permission_exists('call_active_hangup') && $rows) {
