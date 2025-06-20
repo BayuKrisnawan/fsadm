@@ -318,9 +318,12 @@
 		$response .= event_socket_request($fp, $cmd);
 		$cmd = "api status";
 		$response .= event_socket_request($fp, $cmd);
+		$fsarry=$_SESSION['domains'];
+		$duuid=$_SESSION['domain_uuid'];
+		$fsendpoint=$fsarry["$duuid"]["freeswitch_endpoint"];
 		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
 		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
-		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'><b>Hostname: $hostname</b>";
+		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'><b>$fsendpoint [$hostname]</b>";
 		echo "<pre>";
 		echo trim(escape($response));
 		echo "</pre>\n";
