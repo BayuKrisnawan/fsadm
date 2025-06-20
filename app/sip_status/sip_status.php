@@ -313,7 +313,7 @@
 //status
 	if ($fp && permission_exists('sip_status_switch_status')) {
 		$hostcmd = "api system env|grep 'HOSTNAME\|MY_POD_NAME'|cut -d\= -f2|tail -1";
-		$hostname = event_socket_request($fp, $hostcmd);
+		$hostname = trim(event_socket_request($fp, $hostcmd));
 		$cmd = "api version";
 		$response .= event_socket_request($fp, $cmd);
 		$cmd = "api status";
