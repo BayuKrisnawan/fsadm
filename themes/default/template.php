@@ -1053,7 +1053,7 @@
 										<div id='{$row.domain_name}' class='domains_list_item' style='background-color: {$background_color}' onclick="document.location.href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true';">
 									{/if}
 								{*//domain link *}
-									<a href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true' {if $row.domain_uuid == $domain_uuid}style='font-weight: bold;'{/if}>{$row.domain_name}</a>
+									<a href='{$domains_app_path}?domain_uuid={$row.domain_uuid}&domain_change=true' {if $row.domain_uuid == $domain_uuid}style='font-weight: bold;'{/if}title='[{$row.tenant_name}]{$row.freeswitch_endpoint}'>{$row.domain_name}</a>
 								{*//domain description *}
 									{if $row.domain_description != ''}
 										{*//active domain description text color *}
