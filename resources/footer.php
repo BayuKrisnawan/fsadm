@@ -28,6 +28,10 @@
 	require_once "root.php";
 	require_once "resources/require.php";
 
+//modify to record the last page BAYU
+
+	$_SESSION['lastpage']=$_SERVER['DOCUMENT_URI'];
+
 //set variables if not set
 	//if (!isset($_SESSION["template_content"])) { $_SESSION["template_content"] = null; }
 	if (!isset($document)) { $document = null; }

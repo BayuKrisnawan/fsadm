@@ -73,9 +73,9 @@
 				$domain = new domains();
 				$domain->db = $db;
 				$domain->set();
-				 echo $_SESSION["login"]["destination"];
-				 echo $_SERVER['HTTP_REFERER'];
+				$urlpath=$_SESSION['lastpage'];
 
+				
 			//redirect the user
 				if ($_SESSION["login"]["destination"] != '') {
 					echo $_SESSION["login"]["destination"];
@@ -86,7 +86,7 @@
 					// MOD: by BAYU
 					// Redirect to same page when switch domain
 					  if(isset($_SERVER['HTTP_REFERER'])) 
-					 	header("Location: ".$_SERVER['HTTP_REFERER']);
+					 	header("Location: ". rtrim($_SERVER['HTTP_REFERER'],'/').$urlpath);
 					  else
 					 	header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
 				}
