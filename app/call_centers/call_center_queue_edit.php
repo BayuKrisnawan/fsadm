@@ -343,20 +343,19 @@
 			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-QueueID=\${call_center_queue_uuid}\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-QueueExt=\${queue_extension}\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-cdrUuid=\$call_uuid}\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-LeadID=\${lead_id}\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-CustomID=\${custom_id}\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-SubQueueID=\$sub_queue_id}\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"sip_h_X-IVR=\${ivr_var}\"/>\n";
-			//$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_number=\${destination_num}\"/>\n";
-			if ( isset($queue_autocallback)) {
-					//$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
-			} else  {
-					//$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
-					$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
-			}
+			$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_number=\${destination_num}\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"cc_export_vars=call_center_queue_uuid,sip_h_X-LeadID,sip_h_X-CustomID,sip_h_X-QueueID,sip_h_X-QueueExt,dial_method,destination_num,lead_id,row_unique_id,sip_h_X-cdrUuid,sip_h_X-SubQueueID,sip_h_X-IVR\"/>\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"hangup_after_bridge=true\"/>\n";
+			$dialplan_xml .= "		<!-- Entering PREQ While Ringing -->\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"result=\${luarun(switch.lua preq \${queue_extension} \${queue_domain} \${call_uuid})}\"/>\n";
 			if ( ! isset($queue_autocallback)) {
-				$dialplan_xml .= "		<!-- Entering PREQ While Ringing -->\n";
-				$dialplan_xml .= "		<action application=\"set\" data=\"result=\${luarun(switch.lua preq \${queue_extension} \${queue_domain} \${call_uuid})}\"/>\n";
+				$dialplan_xml .= "		<!-- Old Dialer Support\n";
+				$dialplan_xml .= "		<action application=\"lua\" data=\"update_leads.lua \${lead_id} 'AGENT_NOT_CONNECTED' \${row_unique_id}\"/>\n";
+				$dialplan_xml .= "		-->\n";
 			}
 			if ($queue_time_base_score_sec != '') {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_base_score=".$queue_time_base_score_sec."\"/>\n";
@@ -382,16 +381,15 @@
 			$dialplan_xml .= "		<action application=\"callcenter\" data=\"\${queue_extension}@\${queue_domain}\"/>\n";
 			if ( isset($queue_autocallback)) {
 				$dialplan_xml .= "		<!-- Auto Callback Support -->\n";
-				$dialplan_xml .= "		<action application=\"lua\" data=\"update_leads.lua \${lead_id} 'AGENT_NOT_CONNECTED' \${row_unique_id}\"/>\n";
-				$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
+				$dialplan_xml .= "<!--		<action application=\"lua\" data=\"update_leads.lua \${lead_id} 'AGENT_NOT_CONNECTED' \${row_unique_id}\"/> -->\n";
+				//$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
 			}
-			if ( ! isset($queue_autocallback)) {
-				$dialplan_xml .= "		<!-- Entering Lua POSQ Script -->\n";
-				$dialplan_xml .= "		<action application=\"lua\" data=\"switch.lua posq \${queue_extension} \${queue_domain}\"/>\n";
-			}
+			$dialplan_xml .= "		<!-- Entering Lua POSQ Script -->\n";
+			$dialplan_xml .= "		<action application=\"lua\" data=\"switch.lua posq \${queue_extension} \${queue_domain}\"/>\n";
 			if ($destination->valid($queue_timeout_app.':'.$queue_timeout_data)) {
 				$dialplan_xml .= "		<action application=\"".$queue_timeout_app."\" data=\"".$queue_timeout_data."\"/>\n";
 			}
+				$dialplan_xml .= "		<action application=\"hangup\" data=\"\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
 
