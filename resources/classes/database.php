@@ -747,7 +747,6 @@ include "root.php";
 				//loop through the array
 					$checked = false;
 					if (is_array($array)) {
-
 						$x = 0;
 						foreach ($array as $parent_name => $tables) {
 							if (is_array($tables)) {
@@ -866,7 +865,6 @@ include "root.php";
 						foreach($old_array as $parent_name => $rows) {
 							//get relations array
 							$relations = $this->get_relations($parent_name);
-
 							//loop through the rows
 							$x = 0;
 							foreach($rows as $row) {
@@ -916,6 +914,7 @@ include "root.php";
 							//echo "table: ".$table_name."\n";
 							foreach($rows as $row) {
 								if (permission_exists($this->singular($table_name).'_delete')) {
+
 									$sql = "delete from ".$table_prefix.$table_name." ";
 									$i = 0;
 									foreach($row as $field_name => $field_value) {
@@ -925,7 +924,43 @@ include "root.php";
 										$parameters[$field_name] = $field_value;
 										$i++;
 									}
+							
 									try {
+										// HARDCODED to remove Callcenter
+										if ( $table_name == "call_center_queues") {
+											$bk_domain_uuid=$parameters['domain_uuid'];
+											
+											$bk_cc_uuid=$parameters['call_center_queue_uuid'];
+											$bk_ccuuid_only["call_center_queue_uuid"] =$bk_cc_uuid;
+											// echo "<pre><br/>";echo "<hr>";print_r($sql);
+											// echo "<hr> $bk_domain_uuid - $bk_cc_uuid <br>";print_r($parameters);
+											// echo "<pre><br/>";echo "<hr>";print_r($bk_ccuuid_only);
+											
+											$this->execute("delete from ad_campaign_dial_settings where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
+											
+											$this->execute("delete from ad_campaign_lead where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
+											$this->execute("delete from ad_campaign_lead_disposition where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
+
+											$this->execute("delete from ad_contact_settings where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
+											// //  
+											$ccres=$this->execute("select id from ad_blast where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
+											foreach($ccres  as $cc_ablast) {
+												$blast_id['blast_id']=$cc_ablast['id'];
+												// echo "delete :" . $blast_id['blast_id'] . "<br>";
+												$msql="delete from ad_blast_message where blast_id = :blast_id";
+												$this->execute($msql,$blast_id);
+											}
+
+											// //blast_id(ad_blast_message) == id(ad_blast)
+											$this->execute("delete from ad_blast where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
+											
+											$this->execute("delete from ad_contact_upload where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
+											
+											$this->execute("delete from v_call_center_queues_chat_email_settings where call_center_queue_uuid = :call_center_queue_uuid",$bk_ccuuid_only);
+											// //
+											// $this->db->commit();
+											// echo "</pre>";die(" - Debug -");
+										}
 										$this->execute($sql, $parameters);
 										$message["message"] = "OK";
 										$message["code"] = "200";
@@ -954,6 +989,7 @@ include "root.php";
 										$this->message = $message;
 										$m++;
 									}
+
 									unset($parameters);
 								} //if permission
 							} //foreach rows
