@@ -327,7 +327,7 @@ include "root.php";
 				if ($db_type == "mysql") {
 					$sql .= "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '$db_name' and TABLE_NAME = '$table_name' ";
 				}
-				$prep_statement = $this->db->prepare($sql);
+				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (count($result) > 0) {
@@ -712,7 +712,8 @@ include "root.php";
 			}
 
 			public function delete($array) {
-
+				global $db_name;
+				global $db_type;
 				//return the array
 					if (!is_array($array)) { echo "not an array"; return false; }
 
@@ -924,43 +925,67 @@ include "root.php";
 										$parameters[$field_name] = $field_value;
 										$i++;
 									}
-							
+									
 									try {
 										// HARDCODED to remove Callcenter
 										if ( $table_name == "call_center_queues") {
 											$bk_domain_uuid=$parameters['domain_uuid'];
-											
+
 											$bk_cc_uuid=$parameters['call_center_queue_uuid'];
 											$bk_ccuuid_only["call_center_queue_uuid"] =$bk_cc_uuid;
-											// echo "<pre><br/>";echo "<hr>";print_r($sql);
-											// echo "<hr> $bk_domain_uuid - $bk_cc_uuid <br>";print_r($parameters);
-											// echo "<pre><br/>";echo "<hr>";print_r($bk_ccuuid_only);
-											
-											$this->execute("delete from ad_campaign_dial_settings where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
-											
-											$this->execute("delete from ad_campaign_lead where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
-											$this->execute("delete from ad_campaign_lead_disposition where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
-
-											$this->execute("delete from ad_contact_settings where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
-											// //  
-											$ccres=$this->execute("select id from ad_blast where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
-											foreach($ccres  as $cc_ablast) {
-												$blast_id['blast_id']=$cc_ablast['id'];
-												// echo "delete :" . $blast_id['blast_id'] . "<br>";
-												$msql="delete from ad_blast_message where blast_id = :blast_id";
-												$this->execute($msql,$blast_id);
+											echo "<pre><br/>";
+											echo "<hr>";print_r($sql);
+											echo "<hr>";print_r($parameters);
+											echo "<pre><br/>";echo "<hr>";print_r($bk_ccuuid_only);
+											if ($this->table_exists($db_type, $db_name, 'ad_campaign_dial_settings')) 
+												$this->execute("delete from ad_campaign_dial_settings where call_center_queue_uuid = :call_center_queue_uuid and domain_uuid = :domain_uuid",$parameters);
+											if ($this->table_exists($db_type, $db_name, 'ad_campaign_lead'))
+												$this->execute("delete from ad_campaign_lead where where call_center_queue_uuid = :call_center_queue_uuid and domain_uuid = :domain_uuid",$parameters);
+											if ($this->table_exists($db_type, $db_name, 'ad_campaign_lead_disposition'))
+												$this->execute("delete from ad_campaign_lead_disposition where where call_center_queue_uuid = :call_center_queue_uuid and domain_uuid = :domain_uuid",$parameters);
+											if ($this->table_exists($db_type, $db_name, 'ad_contact_settings'))
+												$this->execute("delete from ad_contact_settings where where call_center_queue_uuid = :call_center_queue_uuid and domain_uuid = :domain_uuid",$parameters);
+											if ($this->table_exists($db_type, $db_name, 'ad_blast')) {
+												$ccres=$this->execute("select id from ad_blast where where call_center_queue_uuid = :call_center_queue_uuid and domain_uuid = :domain_uuid",$parameters);
+												foreach($ccres  as $cc_ablast) {
+													$blast_id['blast_id']=$cc_ablast['id'];
+													echo "delete :" . $blast_id['blast_id'] . "<br>";
+													if ($this->table_exists($db_type, $db_name, 'ad_blast_message')) {
+														$msql="delete from ad_blast_message where blast_id = :blast_id";
+														$this->execute($msql,$blast_id);
+													}
+												}
 											}
+											//blast_id(ad_blast_message) == id(ad_blast)
+											if ($this->table_exists($db_type, $db_name, 'call_center_queue_uuid'))
+												$this->execute("delete from ad_blast where where call_center_queue_uuid = :call_center_queue_uuid and domain_uuid = :domain_uuid",$parameters);
+											if ($this->table_exists($db_type, $db_name, 'ad_contact_upload'))
+												$this->execute("delete from ad_contact_upload where where call_center_queue_uuid = :call_center_queue_uuid and domain_uuid = :domain_uuid",$parameters);
+											if ($this->table_exists($db_type, $db_name, 'v_call_center_queues_chat_email_settings'))
+												$this->execute("delete from v_call_center_queues_chat_email_settings where call_center_queue_uuid = :call_center_queue_uuid",$bk_ccuuid_only);
+											if ($this->table_exists($db_type, $db_name, 'v_chat_channels_settings'))
+												$this->execute("delete from v_chat_channels_settings where call_center_queue_uuid = :call_center_queue_uuid",$bk_ccuuid_only);
+											if ($this->table_exists($db_type, $db_name, 'v_web_chat_app_settings'))
+												$this->execute("delete from v_web_chat_app_settings where call_center_queue_uuid = :call_center_queue_uuid",$bk_ccuuid_only);
 
-											// //blast_id(ad_blast_message) == id(ad_blast)
-											$this->execute("delete from ad_blast where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
-											
-											$this->execute("delete from ad_contact_upload where call_center_queue_uuid ='" . $bk_cc_uuid . "' and domain_uuid = '" .$bk_domain_uuid . "'");
-											
-											$this->execute("delete from v_call_center_queues_chat_email_settings where call_center_queue_uuid = :call_center_queue_uuid",$bk_ccuuid_only);
-											// //
+											if ($this->table_exists($db_type, $db_name, 'v_interaction_transferred')) 
+												$this->execute("delete from v_interaction_transferred where call_center_queue_uuid= :call_center_queue_uuid",$bk_ccuuid_only);
 											// $this->db->commit();
 											// echo "</pre>";die(" - Debug -");
+
+										
 										}
+										// v_interaction_transferred
+										if ( $table_name == "call_center_agents") {
+											// echo "<pre><br/>";
+											// echo "<hr>";print_r($sql);
+											// echo "<hr> $bk_domain_uuid - $bk_cc_uuid <br>";print_r($parameters);
+											// echo "<pre><br/>";echo "<hr>";print_r($bk_ccuuid_only);
+											if ($this->table_exists($db_type, $db_name, 'v_interaction_transferred')) 
+												$this->execute("delete from v_interaction_transferred where original_agent_uuid= :call_center_agent_uuid and domain_uuid = :domain_uuid",$parameters);
+											// echo "</pre>";die(" - Debug -");
+										}
+										
 										$this->execute($sql, $parameters);
 										$message["message"] = "OK";
 										$message["code"] = "200";
@@ -995,7 +1020,6 @@ include "root.php";
 							} //foreach rows
 						} //foreach $array
 					}
-
 				//commit the atomic transaction
 					$this->db->commit();
 
