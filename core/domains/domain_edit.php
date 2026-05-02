@@ -576,7 +576,6 @@
 			   $counter++;
 			}
 		}
-		print_r($server_list);
 		unset($sql, $result);
 
 
