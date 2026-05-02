@@ -65,6 +65,9 @@
 		$domain_enabled = $_POST["domain_enabled"];
 		$domain_description = $_POST["domain_description"];
 		$freeswitch_endpoint = $_POST["freeswitch_endpoint"];
+		if ($freeswitch_endpoint == 'others') {
+    			$freeswitch_endpoint = $_POST['freeswitch_endpoint_custom'];
+		}
 		$freeswitch_endpoint_port = $_POST["freeswitch_endpoint_port"];
 		$public_freeswitch_endpoint = $_POST["public_freeswitch_endpoint"];
 	}
@@ -560,6 +563,23 @@
 			$public_freeswitch_endpoint = $row["public_freeswitch_endpoint"];
 		}
 		unset($sql, $parameters, $row);
+                $sql = "select ";
+                $sql .= "hostname, ";
+                $sql .= "address ";
+                $sql .= "from v_callserver_list order by hostname";
+		$result = $database->select($sql, null, 'result');
+		if (is_array($result) && sizeof($result) != 0) {
+			$counter=0;
+			foreach($result as $row) {
+			   $server_list[$counter]['hostname'] = $row["hostname"];
+        		   $server_list[$counter]['ip']       = $row["address"];
+			   $counter++;
+			}
+		}
+		print_r($server_list);
+		unset($sql, $result);
+
+
 	}
 
 //create token
@@ -681,19 +701,50 @@
 	echo "<td class='vtable' align='left'></td>";
 	echo "</tr>\n";
 
+	// FS Endpoint
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	FS Endpoint: \n";
+	echo "    FS Endpoint: \n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='freeswitch_endpoint' maxlength='255' value=\"".escape($freeswitch_endpoint)."\">\n";
+
+	// Tambahkan ID pada select agar mudah dikontrol JS
+	echo "    <select class='formfld' name='freeswitch_endpoint' id='fs_select' onchange='checkOthers(this)'>\n";
+	echo "        <option value=''></option>\n";
+
+	$is_matched = false;
+	if (is_array($server_list)) {
+	    foreach ($server_list as $server) {
+	        $is_ip_match = ($server['ip'] == $freeswitch_endpoint);
+	        $is_host_match = (strpos($freeswitch_endpoint, $server['hostname'] . ".") === 0 || $server['hostname'] == $freeswitch_endpoint);
+        
+	        //if ($is_ip_match || $is_host_match) {
+	        if ($is_ip_match) {
+	            $selected = "selected";
+	            $is_matched = true;
+	        } else {
+	            $selected = "";
+	        }
+        
+	        echo "        <option value=\"".escape($server['ip'])."\" $selected>";
+	        echo escape($server['hostname']) . " (" . escape($server['ip']) . ")";
+	        echo "</option>\n";
+	    }
+	}
+
+	// Opsi "Others" akan terpilih otomatis jika ada isi di $freeswitch_endpoint tapi tidak ada yang match di array
+	$others_selected = (!$is_matched && !empty($freeswitch_endpoint)) ? "selected" : "";
+	echo "        <option value='others' $others_selected>Others...</option>\n";
+	echo "    </select> Available Callserver List (IP). NOTE: Using an IP address is not recommended as it may cause disruptions during server restarts or downtime. <strong>(REQUIRE MANUAL UPDATE)</strong>\n";
+
+	// Input text tambahan untuk custom value (defaultnya sembunyi)
+	$display_custom = ($others_selected) ? "display:block;" : "display:none;";
+	echo "    <div id='custom_input_div' style='margin-top: 5px; $display_custom'>\n";
+	echo "        <input class='formfld' size='50' type='text' id='fs_custom' name='freeswitch_endpoint_custom' placeholder='Enter custom endpoint...' value=\"".escape($freeswitch_endpoint)."\"> NOTE: Hostname resolution may result in increased wait times or lookup delays if the call server becomes unavailable.\n";
+	echo "    </div>\n";
+
 	echo "<br />\n";
-	echo "FreeSwitch Endpoint\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='right'>\n";
-	echo "	<input class='formfld' type='text' name='freeswitch_endpoint_port' maxlength='5' value=\"".escape($freeswitch_endpoint_port)."\">\n";
-	echo "<br />\n";
-	echo "Endpoint Port\n";
+	echo "FreeSwitch Endpoint / Callserver hostname or IP Address \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -703,6 +754,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='public_freeswitch_endpoint' maxlength='255' value=\"".escape($public_freeswitch_endpoint)."\">\n";
+	echo "  <input type=hidden name='freeswitch_endpoint_port' maxlength='5' value=\"8021\">\n";
 	echo "<br />\n";
 	echo "Public FreeSwitch Endpoint| WebRTC Gateway\n";
 	echo "<td class='vtable' align='left'></td>";
@@ -747,6 +799,23 @@
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
+
+?>
+<script>
+function checkOthers(selectElement) {
+    var customDiv = document.getElementById('custom_input_div');
+    var customInput = document.getElementById('fs_custom');
+
+    if (selectElement.value === 'others') {
+        customDiv.style.display = 'block';
+        customInput.focus();
+    } else {
+        customDiv.style.display = 'none';
+        customInput.value = ''; // Kosongkan jika user kembali pilih list
+    }
+}
+</script>
+<?php
 
 //include the footer
 	require_once "resources/footer.php";
