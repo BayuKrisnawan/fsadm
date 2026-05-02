@@ -928,12 +928,12 @@ include "root.php";
 
 									try {
 										// HARDCODED to remove Callcenter
-										echo "<pre>$table_name <br>";
 										// echo " " .$parameters[] print_r($sql);print_r($parameters);die(" - Debug -");
 										if ( $table_name == "call_center_queues" ) {
 											$bk_domain_uuid=$parameters['domain_uuid'];
 											$bk_ccuuid_only["call_center_queue_uuid"] =$bk_cc_uuid;
 											$bk_cc_uuid=$parameters['call_center_queue_uuid'];
+											// Relasi table
 											$sqldepres= $this->execute("SELECT 
 												     conname AS nama_constraint,
 												     conrelid::regclass AS blocktable,
@@ -945,7 +945,7 @@ include "root.php";
 												$tblocklist=$depslist['blocktable'];
 												$tbfield=$depslist['fieldname'];
 												$depsql="delete from ". $tblocklist . " where " . $tbfield ." = '" . $parameters['call_center_queue_uuid'] ."' ";
-												echo "<br> $depsql";												
+												// echo "<br> $depsql";												
 												if ($this->table_exists($db_type, $db_name, $tblocklist) && $tbfield!="original_call_center_queue_uuid" ){
 													$this->execute($depsql);
 												}
@@ -955,7 +955,7 @@ include "root.php";
 										// echo "<pre>";print_r($sql);print_r($parameters);echo "end debug</pre>";die(" - Debug -");
 
 										if ( $table_name == "call_center_queues" ) {
-											echo "<pre>start<br/>";echo "<hr>";print_r($sql);print_r($parameters);print_r($bk_ccuuid_only);
+											// echo "<pre>start<br/>";echo "<hr>";print_r($sql);print_r($parameters);print_r($bk_ccuuid_only);
 											if ($this->table_exists($db_type, $db_name, 'ad_campaign_dial_settings')) 
 												$this->execute("delete from ad_campaign_dial_settings where call_center_queue_uuid = :call_center_queue_uuid and domain_uuid = :domain_uuid",$parameters);
 											if ($this->table_exists($db_type, $db_name, 'ad_campaign_phone_list'))
@@ -970,9 +970,9 @@ include "root.php";
 											if ($this->table_exists($db_type, $db_name, 'ad_blast')) {
 												$ccres=$this->execute("select id from ad_blast where call_center_queue_uuid = :call_center_queue_uuid and domain_uuid = :domain_uuid",$parameters);
 												foreach($ccres  as $cc_ablast) {
-													echo "deleting - ad_blast_message";
+													// echo "deleting - ad_blast_message";
 													$blast_id['blast_id']=$cc_ablast['id'];
-													echo ":<br>" . $blast_id['blast_id'] . "<br>";
+													// echo ":<br>" . $blast_id['blast_id'] . "<br>";
 													if ($this->table_exists($db_type, $db_name, 'ad_blast_message')) {
 														$msql="delete from ad_blast_message where blast_id = :blast_id";
 														$this->execute($msql,$blast_id);
